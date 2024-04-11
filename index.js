@@ -1,15 +1,17 @@
 const row = document.getElementById("row");
 const LoadButton = document.getElementById("loadImages");
 const SecondLoadButton = document.getElementById("loadSecondImages");
-const ImageFunction = (URL) => {
+const searchText = document.querySelector(".searchText");
+const searchButton = document.querySelector("search");
 
+const ImageFunction = (URL) => {
   fetch(URL, {
     method: "GET",
     body: JSON.stringify(),
     headers: {
       "Content-Type": "application/json",
       Authorization: "Ny8bwYzDFyLIMkBGtpOQqBNFTGib4x7gmwbC1Y37REy3rEB0uJuHFydZ",
-    }, 
+    },
   })
     .then((response) => {
       if (response.ok) {
@@ -19,7 +21,7 @@ const ImageFunction = (URL) => {
       }
     })
     .then((data) => {
-      console.log(data); 
+      console.log(data);
 
       data.photos.forEach((obj) => {
         const img = obj.src.medium;
@@ -29,7 +31,7 @@ const ImageFunction = (URL) => {
         console.log(obj);
         const div = document.createElement("div");
         div.classList.add("col-md-4");
-      
+
         div.innerHTML = ` <div class="card mb-4 shadow-sm">
           <img
             src="${img}"
@@ -65,25 +67,28 @@ const ImageFunction = (URL) => {
       });
     })
     .then(() => {
-        const hideButton = document.querySelectorAll(".Hide");
-        console.log(hideButton);
-        hideButton.forEach((btn) => {
-          btn.addEventListener("click", (e) => {
-            const card = e.target.parentNode.parentNode.parentNode.parentNode;
-            card.remove();
-          });
+      const hideButton = document.querySelectorAll(".Hide");
+      console.log(hideButton);
+      hideButton.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const card = e.target.parentNode.parentNode.parentNode.parentNode;
+          card.remove();
         });
       });
+    });
 };
 
-
 window.onload = () => {
-    LoadButton.addEventListener("click", (URL) => {
-      ImageFunction("https://api.pexels.com/v1/search?query=animal");
-    });
-    SecondLoadButton.addEventListener("click", (URL) => {
-      ImageFunction("https://api.pexels.com/v1/search?query=car");
-    });
-    hideButton.remove()
-  }
+  LoadButton.addEventListener("click", (URL) => {
+    ImageFunction("https://api.pexels.com/v1/search?query=animal");
+  });
+  SecondLoadButton.addEventListener("click", (URL) => {
+    ImageFunction("https://api.pexels.com/v1/search?query=car");
+  });
+  hideButton.remove();
 
+  searchButton.addEventListener("click", () => {
+    console.log(searchText.value);
+    ImageFunction(`https://api.pexels.com/v1/search?query=${searchText.value}`);
+  });
+};
